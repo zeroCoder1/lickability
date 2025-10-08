@@ -179,25 +179,35 @@ export default function LickablePeriodicTable() {
     return true;
   });
 
+  React.useEffect(() => {
+    document.body.style.backgroundColor = '#09090b';
+    document.documentElement.style.backgroundColor = '#09090b';
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-zinc-50 to-white text-zinc-900 dark:from-zinc-950 dark:to-black dark:text-zinc-100">
-      <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
-        <header className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+    <div className="min-h-screen w-full bg-zinc-950 text-zinc-100">
+      <div className="mx-auto w-full max-w-none p-2 sm:p-4 lg:p-6">
+        <header className="mb-4 sm:mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Can I lick it? 🧪👅</h1>
-            <p className="mt-1 max-w-prose text-sm text-zinc-600 dark:text-zinc-400">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">Can I lick it? 🧪👅</h1>
+            <p className="mt-1 max-w-prose text-sm text-zinc-400">
             </p>
           </div>
-          <Legend />
+          <div className="w-full sm:w-auto">
+            <Legend />
+          </div>
         </header>
 
-
         {/* Main grid */}
-        <div className="grid grid-cols-18 gap-1 overflow-x-auto rounded-2xl border border-zinc-200 bg-zinc-100 p-2 shadow-inner dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="grid grid-cols-18 gap-0.5 sm:gap-1 w-full rounded-lg sm:rounded-2xl border border-zinc-800 bg-zinc-900 p-1 sm:p-2 shadow-inner">
           {PERIOD_ROWS.map((row, rIdx) => (
             <React.Fragment key={rIdx}>
               {row.map((sym, cIdx) => (
-                <div key={`${rIdx}-${cIdx}`} className="aspect-square w-12 min-w-12 sm:w-14 sm:min-w-14 lg:w-16 lg:min-w-16">
+                <div key={`${rIdx}-${cIdx}`} className="aspect-square">
                   {sym ? (
                     <ElementCell
                       sym={sym}
@@ -214,14 +224,14 @@ export default function LickablePeriodicTable() {
         </div>
 
         {/* f-block */}
-        <div className="mt-3 overflow-x-auto">
+        <div className="mt-2 sm:mt-3 w-full">
           {["Lanthanoid series", "Actinoid series"].map((label, i) => (
-            <div key={label} className="mb-4">
-              <div className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">{label}</div>
-              <div className="grid grid-cols-18 gap-1">
-                {[...Array(3)].map((_, j) => <div key={j} className="aspect-square w-12 min-w-12 sm:w-14 sm:min-w-14 lg:w-16 lg:min-w-16" />)}
+            <div key={label} className="mb-2 sm:mb-4">
+              <div className="mb-1 text-xs text-zinc-400">{label}</div>
+              <div className="grid grid-cols-18 gap-0.5 sm:gap-1 w-full">
+                {[...Array(3)].map((_, j) => <div key={j} className="aspect-square" />)}
                 {F_BLOCK_ROWS[i].map((sym) => (
-                  <div key={sym} className="aspect-square w-12 min-w-12 sm:w-14 sm:min-w-14 lg:w-16 lg:min-w-16">
+                  <div key={sym} className="aspect-square">
                     <ElementCell
                       sym={sym}
                       name={NAMES[sym] || sym}
@@ -238,11 +248,11 @@ export default function LickablePeriodicTable() {
 
         {/* Info modal (read-only) */}
         {selectedEl && (
-          <div className="fixed inset-0 z-50 flex items-end bg-black/30 p-4 sm:items-center sm:justify-center" onClick={() => setSelected(null)}>
-            <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 z-50 flex items-end bg-black/80 p-4 sm:items-center sm:justify-center" onClick={() => setSelected(null)}>
+            <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 text-lg font-bold dark:bg-zinc-800">{selectedEl.symbol}</div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 text-lg font-bold">{selectedEl.symbol}</div>
                   <div>
                     <div className="text-lg font-semibold">
                       {selectedEl.name} <span className="text-zinc-400">({selectedEl.symbol})</span>
@@ -250,7 +260,7 @@ export default function LickablePeriodicTable() {
                     <div className="text-xs text-zinc-500">Atomic # {selectedEl.z}</div>
                   </div>
                 </div>
-                <button onClick={() => setSelected(null)} className="rounded-full border border-zinc-300 bg-white px-2 py-1 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">Close</button>
+                <button onClick={() => setSelected(null)} className="rounded-full border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs hover:bg-zinc-800">Close</button>
               </div>
 
               <div className="flex items-center gap-2 mb-4">
@@ -264,35 +274,54 @@ export default function LickablePeriodicTable() {
               <div className="space-y-3 text-sm">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Atomic Weight</div>
+                    <div className="text-xs text-zinc-400 uppercase tracking-wide">Atomic Weight</div>
                     <div className="font-medium">{ATOMIC_WEIGHTS[selectedEl.symbol] || 'Unknown'}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Discovered</div>
+                    <div className="text-xs text-zinc-400 uppercase tracking-wide">Discovered</div>
                     <div className="font-medium">{DISCOVERY_INFO[selectedEl.symbol]?.year || 'Unknown'}</div>
                   </div>
                 </div>
                 
                 <div>
-                  <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Discoverer</div>
+                  <div className="text-xs text-zinc-400 uppercase tracking-wide">Discoverer</div>
                   <div className="font-medium">{DISCOVERY_INFO[selectedEl.symbol]?.discoverer || 'Unknown'}</div>
                 </div>
               </div>
 
-              <p className="mt-4 text-xs text-zinc-600 dark:text-zinc-400">
+              <p className="mt-4 text-xs text-zinc-400">
                 Please don't actually lick chemical elements.
               </p>
             </div>
           </div>
         )}
 
-        <footer className="mt-8 text-center text-xs text-zinc-500 dark:text-zinc-400">
+        <footer className="mt-8 text-center text-xs text-zinc-400">
           Built for laughs by Supr.design © {new Date().getFullYear()}
         </footer>
       </div>
 
-      {/* 18-col utility */}
-      <style>{`.grid-cols-18 { grid-template-columns: repeat(18, theme(spacing.16)); }`}</style>
+      {/* 18-col utility with responsive sizing */}
+      <style>{`
+        .grid-cols-18 { 
+          grid-template-columns: repeat(18, minmax(0, 1fr)); 
+        }
+        @media (min-width: 640px) {
+          .grid-cols-18 { 
+            grid-template-columns: repeat(18, minmax(2.5rem, 1fr)); 
+          }
+        }
+        @media (min-width: 1024px) {
+          .grid-cols-18 { 
+            grid-template-columns: repeat(18, minmax(3.5rem, 1fr)); 
+          }
+        }
+        @media (min-width: 1280px) {
+          .grid-cols-18 { 
+            grid-template-columns: repeat(18, minmax(4rem, 1fr)); 
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -302,13 +331,13 @@ function ElementCell({ sym, name, z, cat, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`group relative flex h-full w-full select-none flex-col items-center justify-between rounded-lg ${cat.bg} ${cat.ring} p-1 text-white ring-1 shadow-sm transition hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50`}
+      className={`group relative flex h-full w-full select-none flex-col items-center justify-between rounded-md sm:rounded-lg ${cat.bg} ${cat.ring} p-0.5 sm:p-1 text-white ring-1 shadow-sm transition hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/50`}
       title={`${name} (${sym}) — ${cat.label}`}
     >
       <Tip text={`#${z} · ${name}`} />
-      <span className="text-[8px] sm:text-[10px] opacity-80">{z}</span>
-      <span className="text-xs sm:text-sm font-semibold leading-none">{sym}</span>
-      <span className="mb-0.5 line-clamp-1 text-[8px] sm:text-[10px] opacity-90">{name}</span>
+      <span className="text-[5px] sm:text-[7px] lg:text-[8px] xl:text-[9px] opacity-80">{z}</span>
+      <span className="text-[8px] sm:text-[10px] lg:text-xs xl:text-sm font-semibold leading-none">{sym}</span>
+      <span className="hidden sm:block mb-0.5 text-[7px] lg:text-[8px] xl:text-[9px] opacity-90 text-center leading-tight truncate w-full px-0.5">{name}</span>
     </button>
   );
 }
